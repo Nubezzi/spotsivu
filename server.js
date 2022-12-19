@@ -1,5 +1,6 @@
 const express = require('express');
 const request = require('request');
+const PORT = process.env.PORT || 3030;
 
 const app = express();
 
@@ -25,6 +26,6 @@ app.get('/proxy', (req, res) => {
   });
 });
 
-app.listen(5000, () => {
-  console.log('Proxy server listening on port 5000');
+app.listen(PORT, () => {
+  console.log(`Proxy server listening on port ${PORT}`);
 });

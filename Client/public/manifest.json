@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "SPOT price display",
+  "name": "SPOT price display",
   "icons": [
     {
       "src": "favicon.ico",

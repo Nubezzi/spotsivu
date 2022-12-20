@@ -4,7 +4,7 @@
   "description": "price of spot",
   "main": "server.js",
   "scripts": {
-      "start": "node server.js && npm start --prefix Client",
+      "start": "npm install && node server.js",
       "client": "npm start --prefix Client",
       "build": "node Client/build.js"
   },

@@ -78,7 +78,7 @@ function App() {
         )}
       </header>
       {today  ? (
-        <ChartData datatoday={today} datatomorrow={tomorrow}/>
+        <ChartData datatoday={today} datatomorrow={tomorrow} thisHour={curr}/>
       ) : (
         <div>
           <h1>Loading...</h1>

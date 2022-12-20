@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 import {
   Chart as ChartJS,
@@ -25,12 +25,45 @@ Chart.defaults.color = "#fff";
 export default function ChartData(props) {
     const today = props.datatoday
     const tomorrow = props.datatomorrow
+    /*const chartRef = new Chart(
+      document.getElementById('chart-wrapper')
+    )
+
+    useEffect(() => {
+      chartRef.setActiveElements([
+        {datasetIndex: 0, index: props.thisHour}
+      ])
+      chartRef.update()
+    })
+    */
+    /*const focusInput = () => {
+      const chart = chartRef.current.chartInstance;
+      const meta = chart.getDatasetMeta(0);
+      meta.data.forEach((point, index) => {
+        point.custom = point.custom || {};
+        point.custom.backgroundColor = '#00ff00';
+        point.custom.borderColor = '#00ff00';
+        point.custom.borderWidth = 2;
+      })
+      chart.setActiveElements([
+        {
+          datasetIndex: 0,
+          index: props.thisHour,
+        }, {
+
+        }
+      ]);
+    };*/
 
     const options = {
         responsive: true,
         scaleFontColor: "#fff",
-        aspectRatio: 3/2,
-        maxWidth: 1000,
+        aspectRatio: 1,
+        scales: {
+          y: {
+            suggestedMin: 0,
+          }
+        },
         plugins: {
           legend: {
             position: 'top',
@@ -51,18 +84,18 @@ export default function ChartData(props) {
     var dataTomorrow= []
     for (var i = 0; i < today.length; i++) {
         labels.push(i + ":00");
-        dataToday.push(today[i].PriceWithTax);
+        dataToday.push(Math.round(today[i].PriceWithTax * 10000) / 100);
         if(tomorrow != null && tomorrow != undefined && tomorrow.length != 0 && !tomorrow.isEmpty){
             //console.log(tomorrow)
-            var text = ''
+            var text = 0
             try{
               text = tomorrow[i].PriceWithTax
             }
             catch (err){
               //console.log(err)
             }
-            if(text != '') {
-              dataTomorrow.push(text);
+            if(text != 0) {
+              dataTomorrow.push(Math.round(text * 10000) / 100);
             }
         }
     }
@@ -95,6 +128,10 @@ export default function ChartData(props) {
           },
         ],
       };
-
-    return <Line id='chart-wrapper' options={options} data={data} />;
+    
+      //setTimeout(() => { focusInput() }, 2000);
+    
+    return (
+      <Line id='chart-wrapper' options={options} data={data} />
+    );
 }

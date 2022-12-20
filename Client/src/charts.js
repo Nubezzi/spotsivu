@@ -52,8 +52,18 @@ export default function ChartData(props) {
     for (var i = 0; i < today.length; i++) {
         labels.push(i + ":00");
         dataToday.push(today[i].PriceWithTax);
-        if(tomorrow != null){
-            dataTomorrow.push(tomorrow[i].PriceWithTax);
+        if(tomorrow != null && tomorrow != undefined && tomorrow.length != 0 && !tomorrow.isEmpty){
+            //console.log(tomorrow)
+            var text = ''
+            try{
+              text = tomorrow[i].PriceWithTax
+            }
+            catch (err){
+              //console.log(err)
+            }
+            if(text != '') {
+              dataTomorrow.push(text);
+            }
         }
     }
 

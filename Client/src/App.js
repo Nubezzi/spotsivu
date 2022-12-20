@@ -18,18 +18,23 @@ function App() {
   useEffect(() => {
     async function fetchToday() {
       // Make the request to the proxy server
-      const response = await fetch('https://api.spot-hinta.fi/Today');
+      const response = await fetch('api/Today')
+        .catch((e)=> {
+        setErr(e.message)
+        });
       const data = await response.json();
       setToday(data);
     }
     async function fetchTomorrow() {
       // Make the request to the proxy server
-      const response = await fetch('https://api.spot-hinta.fi/DayForward')
+      const response = await fetch('api/DayForward')
         .catch((e)=> {
           setErr(e.message)
         });
         const data = await response.json();
-        setTomorrow(data);
+        if(response.status == 304) {
+          setTomorrow(data);
+        }
       
     }
     try{
@@ -52,7 +57,7 @@ function App() {
           setCurr(Math.round(today[now.getHours()].PriceWithTax * 10000) / 100)
         }
         await timer(3000)
-        console.log(now.getHours() + ":" + now.getMinutes() + "." + now.getSeconds())
+        //console.log(now.getHours() + ":" + now.getMinutes() + "." + now.getSeconds())
       }
     }
     loop()

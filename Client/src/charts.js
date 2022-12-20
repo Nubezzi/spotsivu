@@ -17,7 +17,7 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 );
 
 Chart.defaults.color = "#fff";
@@ -81,6 +81,8 @@ export default function ChartData(props) {
       setHover(false)
     }
 
+    const skipped = (ctx, value) => ctx.p0.skip || ctx.p1.skip ? value : undefined;
+
     const options = {
         responsive: true,
         scaleFontColor: "#fff",
@@ -118,13 +120,51 @@ export default function ChartData(props) {
               text = tomorrow[i].PriceWithTax
             }
             catch (err){
-              //console.log(err)
+              console.log(err)
             }
             if(text != 0) {
               dataTomorrow.push(Math.round(text * 10000) / 100);
             }
         }
     }
+
+    let width, height, gradient1, gradient2;
+
+  function getGradient(ctx, chartArea, mathset) {
+    const chartWidth = chartArea.right - chartArea.left;
+    const chartHeight = chartArea.bottom - chartArea.top;
+    if (gradient1 && mathset == dataToday) return gradient1
+    if (gradient2 && mathset == dataTomorrow) return gradient2
+    if (mathset == dataToday && (!gradient1 || width !== chartWidth || height !== chartHeight)) {
+      width = chartWidth;
+      height = chartHeight;
+      const max = Math.max.apply(Math, mathset)/100
+      const actmax = max * (1/max)
+      const min = Math.min.apply(Math, mathset)/100 * ( 1 / max)
+      const avg = (actmax + min) / 2
+      gradient1 = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+      gradient1.addColorStop(actmax, '#FF0000');
+      gradient1.addColorStop(avg, '#FFE000');
+      gradient1.addColorStop(min, '#00FF23');
+      return gradient1
+    }
+    if(mathset == dataTomorrow && (!gradient2 || width !== chartWidth || height !== chartHeight)){
+      if(dataTomorrow != undefined) return gradient1
+      width = chartWidth;
+      height = chartHeight;
+      const max = Math.max.apply(Math, mathset)/100
+      const actmax = max * (1/max)
+      const min = Math.min.apply(Math, mathset)/100 * ( 1 / max)
+      const avg = (actmax + min) / 2
+      gradient2 = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+      gradient2.addColorStop(actmax, '#FF0000');
+      gradient2.addColorStop(avg, '#FFE000');
+      gradient2.addColorStop(min, '#00FF23');
+      return gradient2
+    }
+
+  }
+  
 
     const data = {
         labels: labels,
@@ -133,24 +173,43 @@ export default function ChartData(props) {
           {
             label: 'Today',
             data: dataToday,
-            backgroundColor: 'rgba(255, 99, 132, 0.9)',
+            backgroundColor: '#0055FF',
             pointStyle: 'circle',
             pointRadius: 5,
             pointHoverRadius: 10,
-            borderColor: 'rgba(255, 99, 132, 0.5)',
             cubicInterpolationMode: 'monotone',
-            tension: 0.4
+            tension: 0.4,
+            borderColor: function(context) {
+              const chart = context.chart;
+              const {ctx, chartArea} = chart;
+      
+              if (!chartArea) {
+                // This case happens on initial chart load
+                return;
+              }
+              return getGradient(ctx, chartArea, dataToday);
+            },
           },
           {
             label: 'Tomorrow',
             data: dataTomorrow,
-            backgroundColor: 'rgba(53, 162, 235, 0.9)',
-            pointStyle: 'circle',
+            backgroundColor: '#FF00FF',
+            pointStyle: 'rectRot',
             pointRadius: 5,
             pointHoverRadius: 10,
-            borderColor: 'rgba(53, 162, 235, 0.5)',
+            borderDash: [8,6],
             cubicInterpolationMode: 'monotone',
-            tension: 0.4
+            tension: 0.4,
+            borderColor: function(context) {
+              const chart = context.chart;
+              const {ctx, chartArea} = chart;
+      
+              if (!chartArea) {
+                // This case happens on initial chart load
+                return;
+              }
+              return getGradient(ctx, chartArea, dataTomorrow);
+            },
           },
         ],
       };

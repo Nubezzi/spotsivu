@@ -7,12 +7,15 @@ function App() {
   const [today, setToday] = useState(null);
   const [tomorrow, setTomorrow] = useState(null);
   const [err, setErr] = useState(null);
-  const [curr, setCurr] = useState(0);
+  const [curr, setCurr] = useState(5);
 
   function refreshPage() {
     window.location.reload(true);
   }
 
+  function getCurr() {
+    return curr
+  }
   
 
   useEffect(() => {
@@ -78,7 +81,7 @@ function App() {
         )}
       </header>
       {today  ? (
-        <ChartData datatoday={today} datatomorrow={tomorrow} thisHour={curr}/>
+        <ChartData datatoday={today} datatomorrow={tomorrow} thisHour={getCurr()}/>
       ) : (
         <div>
           <h1>Loading...</h1>

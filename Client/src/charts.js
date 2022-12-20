@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import Chart from 'chart.js/auto';
 import {
   Chart as ChartJS,
@@ -25,35 +25,61 @@ Chart.defaults.color = "#fff";
 export default function ChartData(props) {
     const today = props.datatoday
     const tomorrow = props.datatomorrow
-    /*const chartRef = new Chart(
-      document.getElementById('chart-wrapper')
-    )
+    const [hover, setHover] = useState(false);
+    const [elements, setElements] = useState(undefined);
+    const chart = Chart.instances[1]
 
     useEffect(() => {
-      chartRef.setActiveElements([
-        {datasetIndex: 0, index: props.thisHour}
-      ])
-      chartRef.update()
-    })
-    */
-    /*const focusInput = () => {
-      const chart = chartRef.current.chartInstance;
-      const meta = chart.getDatasetMeta(0);
-      meta.data.forEach((point, index) => {
-        point.custom = point.custom || {};
-        point.custom.backgroundColor = '#00ff00';
-        point.custom.borderColor = '#00ff00';
-        point.custom.borderWidth = 2;
-      })
-      chart.setActiveElements([
-        {
-          datasetIndex: 0,
-          index: props.thisHour,
-        }, {
-
+      console.log(hover)
+      const chart = Chart.instances[1]
+      const time = new Date()
+      if(chart != undefined){
+        switch (hover){
+          case false:
+            const tooltip = chart.tooltip
+            chart.setActiveElements([
+              {
+                datasetIndex: 0,
+                index: time.getHours(),
+              }
+            ]);
+            tooltip.setActiveElements([
+              {
+                datasetIndex: 0,
+                index: time.getHours(),
+              }
+            ]);
+          case true:
+            const tooltip2 = chart.tooltip
+            chart.setActiveElements([]);
+            tooltip2.setActiveElements([]);
+          chart.update()
         }
-      ]);
-    };*/
+        const tooltip = chart.tooltip
+        chart.setActiveElements([
+          {
+            datasetIndex: 0,
+            index: time.getHours(),
+          }
+        ]);
+        tooltip.setActiveElements([
+          {
+            datasetIndex: 0,
+            index: time.getHours(),
+          }
+        ]);
+        chart.update()
+      }
+    }, [hover])
+
+    
+    const handleEnter = () => {
+      setHover(true)
+    }
+
+    const handleLeave = () => {
+      setHover(false)
+    }
 
     const options = {
         responsive: true,
@@ -128,10 +154,8 @@ export default function ChartData(props) {
           },
         ],
       };
-    
-      //setTimeout(() => { focusInput() }, 2000);
-    
+
     return (
-      <Line id='chart-wrapper' options={options} data={data} />
+      <Line onMouseEnter={() => handleEnter()} onMouseLeave={() => handleLeave()} id='chart-wrapper' options={options} data={data} />
     );
 }

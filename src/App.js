@@ -18,13 +18,13 @@ function App() {
   useEffect(() => {
     async function fetchToday() {
       // Make the request to the proxy server
-      const response = await fetch('http://localhost:5000/proxy?url=https://api.spot-hinta.fi/Today');
+      const response = await fetch('../../proxy?url=https://api.spot-hinta.fi/Today');
       const data = await response.json();
       setToday(data);
     }
     async function fetchTomorrow() {
       // Make the request to the proxy server
-      const response = await fetch('http://localhost:5000/proxy?url=https://api.spot-hinta.fi/DayForward')
+      const response = await fetch('../../proxy?url=https://api.spot-hinta.fi/DayForward')
         .catch((e)=> {
           setErr(e.message)
         });

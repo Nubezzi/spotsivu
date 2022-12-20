@@ -32,7 +32,7 @@ function App() {
           setErr(e.message)
         });
         const data = await response.json();
-        if(response.status == 304) {
+        if(response.status == 304 || response.status == 200) {
           setTomorrow(data);
         }
       

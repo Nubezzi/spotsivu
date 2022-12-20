@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Chart from 'chart.js/auto';
 import {
   Chart as ChartJS,
@@ -9,7 +9,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import {Line } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 
 ChartJS.register(
   CategoryScale,
@@ -26,16 +26,16 @@ export default function ChartData(props) {
     const today = props.datatoday
     const tomorrow = props.datatomorrow
     const [hover, setHover] = useState(false);
-    const [elements, setElements] = useState(undefined);
-    const chart = Chart.instances[1]
+    const chartRef = useRef(null)
 
     useEffect(() => {
-      console.log(hover)
-      const chart = Chart.instances[1]
+      const chart = chartRef.current
       const time = new Date()
       if(chart != undefined){
+        console.log(hover + " ylhäällä")
         switch (hover){
           case false:
+            console.log(hover + " tässä")
             const tooltip = chart.tooltip
             chart.setActiveElements([
               {
@@ -49,10 +49,13 @@ export default function ChartData(props) {
                 index: time.getHours(),
               }
             ]);
+            break;
           case true:
+            console.log(hover + " täällä")
             const tooltip2 = chart.tooltip
             chart.setActiveElements([]);
             tooltip2.setActiveElements([]);
+            break;
           chart.update()
         }
         const tooltip = chart.tooltip
@@ -70,7 +73,7 @@ export default function ChartData(props) {
         ]);
         chart.update()
       }
-    }, [hover])
+    }, [hover, new Date().getHours])
 
     
     const handleEnter = () => {
@@ -156,6 +159,6 @@ export default function ChartData(props) {
       };
 
     return (
-      <Line onMouseEnter={() => handleEnter()} onMouseLeave={() => handleLeave()} id='chart-wrapper' options={options} data={data} />
+      <Line ref={chartRef} onMouseEnter={() => handleEnter()} onMouseLeave={() => handleLeave()} id='chart-wrapper' options={options} data={data} />
     );
 }

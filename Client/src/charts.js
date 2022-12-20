@@ -32,10 +32,8 @@ export default function ChartData(props) {
       const chart = chartRef.current
       const time = new Date()
       if(chart != undefined){
-        console.log(hover + " ylhäällä")
         switch (hover){
           case false:
-            console.log(hover + " tässä")
             const tooltip = chart.tooltip
             chart.setActiveElements([
               {
@@ -51,7 +49,6 @@ export default function ChartData(props) {
             ]);
             break;
           case true:
-            console.log(hover + " täällä")
             const tooltip2 = chart.tooltip
             chart.setActiveElements([]);
             tooltip2.setActiveElements([]);
